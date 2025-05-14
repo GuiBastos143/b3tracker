@@ -1,0 +1,11 @@
+<h1>Tracked Assets</h1>
+<a href="{% url 'asset_create' %}">Add Asset</a>
+<ul>
+  {% for asset in assets %}
+    <li>
+      <a href="{% url 'asset_detail' asset.pk %}">
+        {{ asset.name }} (Last price: {{ asset.last_price }})
+      </a>
+    </li>
+  {% endfor %}
+</ul>
