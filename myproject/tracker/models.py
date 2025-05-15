@@ -25,6 +25,8 @@ class Asset(models.Model):
     email = models.EmailField()
     last_price = models.FloatField(null=True, blank=True)
     notified = models.BooleanField(default=False)
+    notify_only_once = models.BooleanField(default=False)
+    tracking_frequency = models.IntegerField(default=5, help_text="Frequency to check the asset (minutes)")
 
     def __str__(self):
         return self.name

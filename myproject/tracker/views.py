@@ -1,7 +1,7 @@
-# tracker/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Asset, PriceRecord
 from .forms import AssetForm
+from .utils import fetch_asset_price
 
 def asset_list(request):
     assets = Asset.objects.all()
@@ -11,7 +11,17 @@ def asset_create(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
         if form.is_valid():
-            form.save()
+            asset = form.save()
+            price = fetch_asset_price(asset.name)
+            if price is not None:
+                asset.last_price = price
+                asset.save()
+                PriceRecord.objects.create(asset=asset, price=price)
+            else:
+                return render(request, 'tracker/asset_form.html', {
+                    'form': form,
+                    'error': 'Could not fetch the price for this asset. Please try again later.'
+                })
             return redirect('asset_list')
     else:
         form = AssetForm()

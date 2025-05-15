@@ -1,7 +1,131 @@
 <h1>Add New Asset</h1>
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
+  <p>Name: {{ form.name }}</p>
+  <p>Asset type: {{ form.asset_type }}</p>
+  <p>Tunnel type: {{ form.tunnel_type }}</p>
+  
+  <p>
+  Volatility:
+  <input
+    type="range"
+    min="0"
+    max="2"
+    step="0.01"
+    value="{{ form.volatility.value|default:"0.2" }}"
+    id="vol_slider"
+    name="volatility"
+    oninput="vol_number.value = this.value"
+  >
+  <input
+    type="number"
+    min="0"
+    max="2"
+    step="0.01"
+    value="{{ form.volatility.value|default:"0.2" }}"
+    id="vol_number"
+    name="volatility"
+    oninput="vol_slider.value = this.value"
+  >
+  </p>
+  <p>
+  Strike price:
+  <input
+    type="range"
+    min="0"
+    max="1000"
+    step="1"
+    value="{{ form.strike_price.value|default:"100" }}"
+    id="strike_slider"
+    name="strike_price"
+    oninput="strike_number.value = this.value"
+  >
+  <input
+    type="number"
+    min="0"
+    max="1000"
+    step="1"
+    value="{{ form.strike_price.value|default:"100" }}"
+    id="strike_number"
+    name="strike_price"
+    oninput="strike_slider.value = this.value"
+  >
+  </p>
+  <p>
+  Expiration days:
+  <input
+    type="range"
+    min="1"
+    max="365"
+    step="1"
+    value="{{ form.expiration_days.value|default:"30" }}"
+    id="exp_slider"
+    name="expiration_days"
+    oninput="exp_number.value = this.value"
+  >
+  <input
+    type="number"
+    min="1"
+    max="365"
+    step="1"
+    value="{{ form.expiration_days.value|default:"30" }}"
+    id="exp_number"
+    name="expiration_days"
+    oninput="exp_slider.value = this.value"
+  >
+  </p>
+  <p>
+  Interest rate:
+  <input
+    type="range"
+    min="0"
+    max="1"
+    step="0.001"
+    value="{{ form.interest_rate.value|default:"0.13" }}"
+    id="int_slider"
+    name="interest_rate"
+    oninput="int_number.value = this.value"
+  >
+  <input
+    type="number"
+    min="0"
+    max="1"
+    step="0.001"
+    value="{{ form.interest_rate.value|default:"0.13" }}"
+    id="int_number"
+    name="interest_rate"
+    oninput="int_slider.value = this.value"
+  >
+  </p>
+  <p>
+  Tracking frequency (minutes):
+  <input
+    type="range"
+    min="1"
+    max="1440"
+    step="1"
+    value="{{ form.tracking_frequency.value|default:"5" }}"
+    id="freq_slider"
+    name="tracking_frequency"
+    oninput="freq_number.value = this.value"
+  >
+  <input
+    type="number"
+    min="1"
+    max="1440"
+    step="1"
+    value="{{ form.tracking_frequency.value|default:"5" }}"
+    id="freq_number"
+    name="tracking_frequency"
+    oninput="freq_slider.value = this.value"
+  >
+  </p>
+  <p>
+  <label>
+    {{ form.notify_only_once }} Notify only once
+  </label>
+  </p>
+  <p>Email: {{ form.email }}</p>
   <button type="submit">Save</button>
 </form>
 <a href="{% url 'asset_list' %}">Back to list</a>
