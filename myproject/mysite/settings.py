@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,3 +135,16 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'guirbastos143@gmail.com'
 EMAIL_HOST_PASSWORD = ''  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'   # Docker service name 'redis'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERY_BEAT_SCHEDULE = {
+    'update-asset-prices-every-minute': {
+        'task': 'tracker.tasks.update_asset_prices',
+        'schedule': crontab(minute='*/1'),
+    },
+}

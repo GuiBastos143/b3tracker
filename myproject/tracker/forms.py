@@ -5,7 +5,7 @@ class AssetForm(forms.ModelForm):
     class Meta:
         model = Asset
         fields = [
-            'name', 'asset_type', 'tunnel_type',
+            'name', 'tunnel_type', 'option_type',
             'volatility', 'strike_price', 'expiration_days',
             'interest_rate','notify_only_once', 'tracking_frequency', 'email'
         ]

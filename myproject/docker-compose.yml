@@ -20,5 +20,23 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+    celery:
+    build: .
+    command: celery -A mysite worker --loglevel=info
+    depends_on:
+      - web
+      - redis
+  celery-beat:
+    build: .
+    command: celery -A mysite beat --loglevel=info
+    depends_on:
+      - web
+      - redis
+      
 volumes:
   pgdata:

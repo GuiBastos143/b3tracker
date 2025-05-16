@@ -6,17 +6,11 @@ class Asset(models.Model):
         ('dynamic_sync', 'Dynamic Synchronous'),
         ('dynamic_async', 'Dynamic Unsynchronous'),
     ]
-
-    ASSET_TYPE_CHOICES = [
-        ('stock', 'Stock / ETF / BDR'),
-        ('future', 'Future'),
-        ('index', 'Index'),
-        ('idi', 'IDI'),
-        ('itc', 'ITC'),
+    OPTION_TYPE_CHOICES = [
+    ('call', 'Call'),
+    ('put', 'Put'),
     ]
-
     name = models.CharField(max_length=100)
-    asset_type = models.CharField(max_length=20, choices=ASSET_TYPE_CHOICES)
     tunnel_type = models.CharField(max_length=20, choices=TUNNEL_CHOICES)
     volatility = models.FloatField()
     strike_price = models.FloatField()
@@ -27,6 +21,9 @@ class Asset(models.Model):
     notified = models.BooleanField(default=False)
     notify_only_once = models.BooleanField(default=False)
     tracking_frequency = models.IntegerField(default=5, help_text="Frequency to check the asset (minutes)")
+    lower_tunnel = models.FloatField(null=True, blank=True)
+    upper_tunnel = models.FloatField(null=True, blank=True)
+    option_type = models.CharField(max_length=4, choices=OPTION_TYPE_CHOICES)
 
     def __str__(self):
         return self.name

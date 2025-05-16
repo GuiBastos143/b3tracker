@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Asset, PriceRecord
 from .forms import AssetForm
 from .utils import fetch_asset_price
+from .tunnel import tunnel_limits
 
 def asset_list(request):
     assets = Asset.objects.all()
@@ -11,18 +12,27 @@ def asset_create(request):
     if request.method == 'POST':
         form = AssetForm(request.POST)
         if form.is_valid():
-            asset = form.save()
+            asset = form.save(commit=False)
+            # Scrape price as soon as asset is created
             price = fetch_asset_price(asset.name)
             if price is not None:
                 asset.last_price = price
-                asset.save()
-                PriceRecord.objects.create(asset=asset, price=price)
-            else:
-                return render(request, 'tracker/asset_form.html', {
-                    'form': form,
-                    'error': 'Could not fetch the price for this asset. Please try again later.'
-                })
-            return redirect('asset_list')
+            # Calculate tunnels using the user's params
+            S = asset.last_price if asset.last_price else asset.strike_price  # fallback if no price
+            K = asset.strike_price
+            r = asset.interest_rate
+            sigma = asset.volatility
+            t = asset.expiration_days / 252
+            option_type = asset.option_type
+            tunnel_type = asset.tunnel_type
+
+            lower, upper = tunnel_limits(S, K, r, sigma, t, tunnel_type, option_type)
+            asset.lower_tunnel = lower
+            asset.upper_tunnel = upper
+
+            asset.save()
+            PriceRecord.objects.create(asset=asset, price=price)
+            return redirect('asset_detail', pk=asset.pk)
     else:
         form = AssetForm()
     return render(request, 'tracker/asset_form.html', {'form': form})
