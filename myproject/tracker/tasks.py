@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.utils import timezone
 from .models import Asset, PriceRecord
-from utils import fetch_asset_price 
+from .utils import fetch_asset_price 
 
 @shared_task
 def update_asset_prices():

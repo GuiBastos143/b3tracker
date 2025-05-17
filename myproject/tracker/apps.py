@@ -6,4 +6,4 @@ class TrackerConfig(AppConfig):
     name = 'tracker'
     def ready(self):
         from .models import Asset
-        Asset.objects.all().delete()
+        #Asset.objects.all().delete()

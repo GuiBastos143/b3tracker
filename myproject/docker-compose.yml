@@ -50,6 +50,8 @@ services:
     depends_on:
       - web
       - redis
+    env_file:
+    - .env
 
   celery-beat:
     container_name: celery_beat
@@ -58,6 +60,8 @@ services:
     depends_on:
       - web
       - redis
+    env_file:
+    - .env
       
 volumes:
   pgdata:
