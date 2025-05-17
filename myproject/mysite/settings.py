@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'inoadb',
+        'NAME': 'postgres',
         'USER': 'guibastos',
         'PASSWORD': 'inoa123',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -136,7 +136,7 @@ EMAIL_HOST_USER = 'guirbastos143@gmail.com'
 EMAIL_HOST_PASSWORD = ''  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-CELERY_BROKER_URL = 'redis://redis:6379/0'   # Docker service name 'redis'
+CELERY_BROKER_URL = 'redis://redis:6379/0'   
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
