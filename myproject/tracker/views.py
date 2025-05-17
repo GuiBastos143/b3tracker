@@ -39,8 +39,12 @@ def asset_create(request):
 
 def asset_detail(request, pk):
     asset = get_object_or_404(Asset, pk=pk)
-    prices = asset.price_records.order_by('-scraped_at')[:50]
+    prices = asset.price_records.order_by('scraped_at') 
+    first_price = prices.first()
+    latest_price = prices.last()
     return render(request, 'tracker/asset_detail.html', {
         'asset': asset,
-        'prices': prices
+        'prices': prices,
+        'first_price': first_price,
+        'latest_price': latest_price
     })

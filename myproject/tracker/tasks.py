@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.utils import timezone
 from .models import Asset, PriceRecord
-from .utils import fetch_asset_price 
+from .utils import fetch_asset_price, send_price_alert_buy, send_price_alert_sell 
 
 @shared_task
 def update_asset_prices():
@@ -18,3 +18,8 @@ def update_asset_prices():
                 asset.last_price = price
                 asset.save()
                 PriceRecord.objects.create(asset=asset, price=price)
+                
+                if asset.lower_tunnel is not None and price < asset.lower_tunnel:
+                    send_price_alert_buy(asset.name, price, asset.email)
+                elif asset.upper_tunnel is not None and price > asset.upper_tunnel:
+                    send_price_alert_sell(asset.name, price, asset.email)
