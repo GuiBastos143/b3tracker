@@ -1,34 +1,32 @@
 <h1>{{ asset.name }}</h1>
-<p><strong>Tunnel Type:</strong> {{ asset.get_tunnel_type_display }}</p>
-<p><strong>First Price: {{ prices.last.price }} at {{ prices.last.scraped_at }}</p>
-<p><strong>Latest Price: {{ prices.first.price }} at {{ prices.first.scraped_at }}</p>
-<p><strong>Lower Tunnel Bound:</strong> {{ asset.lower_tunnel }}</p>
-<p><strong>Upper Tunnel Bound:</strong> {{ asset.upper_tunnel }}</p>
-<p><strong>Strike Price:</strong> {{ asset.strike_price }}</p>
-<p><strong>Volatility:</strong> {{ asset.volatility }}</p>
-<p><strong>Interest Rate:</strong> {{ asset.interest_rate }}</p>
-<p><strong>Expiration Days:</strong> {{ asset.expiration_days }}</p>
-<h2>{{ asset.name }} - Price History</h2>
-<table class="table">
-  <thead>
+<p><strong>Upper Tunnel:</strong> {{ asset.upper_tunnel }}</p>
+{% if asset and asset.last_price %}
+  <p>
+    <strong>Last extracted price:</strong> {{ asset.last_price }}
+  </p>
+{% elif object and object.last_price %}
+  <p>
+    <strong>Last extracted price:</strong> {{ object.last_price }}
+  </p>
+{% else %}
+  <p>
+    <strong>Last extracted price:</strong> <em>Not available yet</em>
+  </p>
+{% endif %}
+<p><strong>Lower Tunnel:</strong> {{ asset.lower_tunnel }}</p>
+<p><strong>Email:</strong> {{ asset.email }}</p>
+<p><strong>Notify Only Once:</strong> {{ asset.notify_only_once }}</p>
+
+<h2>Price History</h2>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Price</th>
+  </tr>
+  {% for price in prices %}
     <tr>
-      <th>#</th>
-      <th>Price</th>
-      <th>Scraped At</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for price in prices %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
+      <td>{{ price.scraped_at }}</td>
       <td>{{ price.price }}</td>
-      <td>{{ price.scraped_at|date:"Y-m-d H:i:s" }}</td>
     </tr>
-    {% empty %}
-    <tr>
-      <td colspan="3">No price records found.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  {% endfor %}
 </table>
-<a href="{% url 'asset_list' %}">Back to list</a>
