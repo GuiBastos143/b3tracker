@@ -23,25 +23,31 @@ def update_asset_prices():
             (now - last_record.scraped_at).total_seconds()
             >= asset.tracking_frequency * 60
         )
-        if due:
-            price = fetch_asset_price(asset.name)
-            if price is not None:
-                asset.last_price = price
+
+        if not due:
+            continue
+
+        price = fetch_asset_price(asset.name)
+        if price is None:
+            continue
+
+        asset.last_price = price
+        asset.save()
+        PriceRecord.objects.create(asset=asset, price=price)
+
+        if price < asset.lower_tunnel:
+            if not asset.notified or not asset.notify_only_once:
+                send_price_alert_buy(asset.name, price, asset.email)
+                if asset.notify_only_once:
+                    asset.notified = True
+                    asset.save()
+        elif price > asset.upper_tunnel:
+            if not asset.notified or not asset.notify_only_once:
+                send_price_alert_sell(asset.name, price, asset.email)
+                if asset.notify_only_once:
+                    asset.notified = True
+                    asset.save()
+        else:
+            if asset.notified:
+                asset.notified = False
                 asset.save()
-                PriceRecord.objects.create(asset=asset, price=price)
-                if price < asset.lower_tunnel:
-                    if not asset.notified or not asset.notify_only_once:
-                        send_price_alert_buy(asset.name, price, asset.email)
-                        if asset.notify_only_once:
-                            asset.notified = True
-                            asset.save()
-                elif price > asset.upper_tunnel:
-                    if not asset.notified or not asset.notify_only_once:
-                        send_price_alert_sell(asset.name, price, asset.email)
-                        if asset.notify_only_once:
-                            asset.notified = True
-                            asset.save()
-                else:
-                    if asset.notified:
-                        asset.notified = False
-                        asset.save()
