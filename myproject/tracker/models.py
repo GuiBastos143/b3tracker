@@ -1,10 +1,15 @@
 from django.db import models
 
 class Asset(models.Model):
+    TUNNEL_TYPE_CHOICES = [
+        ('manual', 'Manual'),
+        ('percentage', 'Percentage'),
+    ]
     name = models.CharField(max_length=100)
     lower_tunnel = models.FloatField(default=0)
     upper_tunnel = models.FloatField(default=0)
     tracking_frequency = models.IntegerField(default=5, help_text="Check frequency (minutes)")
+    tunnel_input_type = models.CharField(max_length=20, choices=TUNNEL_TYPE_CHOICES, default='manual')
     email = models.EmailField()
     notify_only_once = models.BooleanField(default=False)
     notified = models.BooleanField(default=False)

@@ -1,21 +1,43 @@
 <h1>{{ asset.name }}</h1>
-<p><strong>Upper Tunnel:</strong> {{ asset.upper_tunnel }}</p>
-{% if asset and asset.last_price %}
-  <p>
-    <strong>Last extracted price:</strong> {{ asset.last_price }}
-  </p>
-{% elif object and object.last_price %}
-  <p>
-    <strong>Last extracted price:</strong> {{ object.last_price }}
-  </p>
-{% else %}
-  <p>
-    <strong>Last extracted price:</strong> <em>Not available yet</em>
-  </p>
-{% endif %}
-<p><strong>Lower Tunnel:</strong> {{ asset.lower_tunnel }}</p>
-<p><strong>Email:</strong> {{ asset.email }}</p>
-<p><strong>Notify Only Once:</strong> {{ asset.notify_only_once }}</p>
+<p>
+  <strong>Tunnel input type:</strong>
+  {% if asset.tunnel_input_type == 'manual' %}
+    Manual
+  {% else %}
+    Percentage
+  {% endif %}
+</p>
+<p>
+  <strong>Upper tunnel:</strong> {{ asset.upper_tunnel }}
+  {% if asset.tunnel_input_type == 'manual' %}
+    (exact price)
+  {% else %}
+    (% above first extracted price)
+  {% endif %}
+</p>
+<p>
+  <strong>Lower tunnel:</strong> {{ asset.lower_tunnel }}
+  {% if asset.tunnel_input_type == 'manual' %}
+    (exact price)
+  {% else %}
+    (% below first extracted price)
+  {% endif %}
+</p>
+<p>
+<strong>First extracted price:</strong> {{ first_price }}
+</p>
+<p>
+<strong>Last extracted price:</strong> {{ last_price }}
+</p>
+<p>
+  <strong>Tracking frequency:</strong> {{ asset.tracking_frequency }} minutes
+</p>
+<p>
+  <strong>Notify only once:</strong> {{ asset.notify_only_once|yesno:"Yes,No" }}
+</p>
+<p>
+  <strong>Email:</strong> {{ asset.email }}
+</p>
 
 <h2>Price History</h2>
 <table>
@@ -30,3 +52,5 @@
     </tr>
   {% endfor %}
 </table>
+
+<a href="{% url 'asset_list' %}">🏠 Home</a>

@@ -3,9 +3,9 @@
 <ul>
   {% for asset in assets %}
     <li>
-      <a href="{% url 'asset_detail' asset.pk %}">
-        {{ asset.name }} (Last price: {{ asset.last_price }})
-      </a>
+      <a href="{% url 'asset_detail' asset.pk %}">{{ asset.name }}</a>
+      (<a href="{% url 'asset_edit' asset.pk %}">Edit</a>
+       | <a href="{% url 'asset_delete' asset.pk %}">Delete</a>)
     </li>
   {% endfor %}
 </ul>

@@ -1,13 +1,22 @@
+<h1>{% if editing %}Edit{% else %}Add{% endif %} Asset</h1>
 <form method="post">
   {% csrf_token %}
   <p>
     <strong>{{ form.name.label_tag }}</strong> {{ form.name }}
   </p>
+  <p><strong>{{ form.tunnel_input_type.label_tag }}</strong></p>
+  <p>
+    {% for radio in form.tunnel_input_type %}
+      {{ radio.tag }} {{ radio.choice_label }}
+    {% endfor %}
+  </p>
   <p>
     <strong>{{ form.upper_tunnel.label_tag }}</strong> {{ form.upper_tunnel }}
+    <span id="upper_help"></span>
   </p>
   <p>
     <strong>{{ form.lower_tunnel.label_tag }}</strong> {{ form.lower_tunnel }}
+    <span id="lower_help"></span>
   </p>
   <p>
     <strong>{{ form.tracking_frequency.label_tag }}</strong>
@@ -32,3 +41,19 @@
   </p>
   <button type="submit">Save</button>
 </form>
+<script>
+const radios = document.getElementsByName('tunnel_input_type');
+const upperHelp = document.getElementById('upper_help');
+const lowerHelp = document.getElementById('lower_help');
+function updateHelp() {
+  if (document.querySelector('input[name="tunnel_input_type"]:checked').value === 'manual') {
+    upperHelp.textContent = '(Exact price)';
+    lowerHelp.textContent = '(Exact price)';
+  } else {
+    upperHelp.textContent = '(Percentage above: e.g. 5 means +5%)';
+    lowerHelp.textContent = '(Percentage below: e.g. 10 means -10%)';
+  }
+}
+for (const r of radios) { r.addEventListener('change', updateHelp); }
+updateHelp();
+</script>

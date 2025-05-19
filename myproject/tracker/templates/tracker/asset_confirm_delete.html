@@ -1,0 +1,7 @@
+<h1>Delete Asset</h1>
+<p>Are you sure you want to delete asset <strong>{{ asset.name }}</strong>?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+    <a href="{% url 'asset_detail' asset.pk %}">Cancel</a>
+</form>
