@@ -1,7 +1,14 @@
 from django import forms
 from .models import Asset
 
+
 class AssetForm(forms.ModelForm):
+
+    """
+    Form for creating or editing an Asset.
+    Allows the user to specify tunnel mode (manual/percentage),
+    tunnel values, tracking frequency, notification mode, and email.
+    """
 
     TUNNEL_INPUT_CHOICES = [
         ('manual', 'Manual fixed input'),
@@ -26,7 +33,9 @@ class AssetForm(forms.ModelForm):
             'lower_tunnel': forms.NumberInput(attrs={'step': 0.01}),
             'tracking_frequency': forms.NumberInput(attrs={
                 'type': 'range', 'min': 1, 'max': 1440, 'step': 1, 'value': 5,
-                'oninput': "document.getElementById('freq_output').value=this.value"
+                'oninput': (
+                    "document.getElementById('freq_output').value=this.value"
+                )
             }),
             'notify_only_once': forms.CheckboxInput(),
             'email': forms.EmailInput(),
